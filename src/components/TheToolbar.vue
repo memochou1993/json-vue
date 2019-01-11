@@ -33,19 +33,23 @@
 
     <v-toolbar
       app
+      dark
       clipped-right
-      color="orange lighten-2"
+      color="primary lighten-1"
     >
       <v-toolbar-title
         class="headline"
       >
-        JSON Editor
+        Vue
       </v-toolbar-title>
+
       <v-spacer />
+
       <v-toolbar-side-icon
         class="hidden-md-and-up"
         @click.stop="drawer = !drawer"
       />
+
       <v-toolbar-items
         class="hidden-sm-and-down"
       >
@@ -53,9 +57,9 @@
           v-for="(link, index) in links"
           :key="index"
           :to="link.to"
+          class="title font-weight-light"
           flat
           exact
-          class="title font-weight-light"
         >
           {{ link.title }}
         </v-btn>
@@ -76,9 +80,9 @@ export default {
           icon: 'dashboard',
         },
         {
-          title: 'About',
-          to: { name: 'about' },
-          icon: 'info',
+          title: 'Gallery',
+          to: { name: 'gallery' },
+          icon: 'photo_library',
         },
       ],
     };

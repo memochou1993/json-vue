@@ -19,47 +19,51 @@
         md1
         xs12
       >
-        <div
-          class="hidden-sm-and-down"
+        <v-layout
+          justify-center
         >
-          <v-icon
-            x-large
-            color="orange lighten-1"
-            @click="passData('code', 'tree')"
-            class="my-3"
+          <div
+            class="hidden-sm-and-down"
           >
-            arrow_forward
-          </v-icon>
-          <br>
-          <v-icon
-            x-large
-            color="orange lighten-1"
-            @click="passData('tree', 'code')"
-            class="my-3"
+            <v-icon
+              x-large
+              color="primary lighten-1"
+              class="ma-3"
+              @click="passData('code', 'tree')"
+            >
+              arrow_forward
+            </v-icon>
+            <br>
+            <v-icon
+              x-large
+              color="primary lighten-1"
+              class="ma-3"
+              @click="passData('tree', 'code')"
+            >
+              arrow_back
+            </v-icon>
+          </div>
+          <div
+            class="hidden-md-and-up"
           >
-            arrow_back
-          </v-icon>
-        </div>
-        <div
-          class="hidden-md-and-up"
-        >
-          <v-icon
-            x-large
-            color="orange lighten-1"
-            @click="passData('code', 'tree')"
-            class="ma-3"
-          >
-            arrow_downward
-          </v-icon>
-          <v-icon
-            x-large
-            color="orange lighten-1"
-            @click="passData('tree', 'code')"
-            class="ma-3"
-          >
-            arrow_upward
-          </v-icon>
-        </div>
+            <v-icon
+              x-large
+              color="primary lighten-1"
+              class="ma-3"
+              @click="passData('code', 'tree')"
+            >
+              arrow_downward
+            </v-icon>
+            <v-icon
+              x-large
+              color="primary lighten-1"
+              class="ma-3"
+              @click="passData('tree', 'code')"
+            >
+              arrow_upward
+            </v-icon>
+          </div>
+        </v-layout>
       </v-flex>
       <v-flex
         md5
@@ -140,16 +144,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.editor {
-  height: 70vh;
-}
-div.jsoneditor,
-div.jsoneditor-menu {
-  border-color: #5c6bc0;
-}
-div.jsoneditor-menu {
-  background-color: #5c6bc0;
-}
-</style>

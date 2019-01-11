@@ -1,9 +1,9 @@
 <template>
   <div>
     <v-footer
+      app
       fixed
-      color="orange lighten-2"
-    >
-    </v-footer>
+      color="primary lighten-2"
+    />
   </div>
 </template>
