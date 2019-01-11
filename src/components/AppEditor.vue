@@ -145,4 +145,11 @@ export default {
 .editor {
   height: 70vh;
 }
+div.jsoneditor,
+div.jsoneditor-menu {
+  border-color: #5c6bc0;
+}
+div.jsoneditor-menu {
+  background-color: #5c6bc0;
+}
 </style>

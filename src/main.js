@@ -6,7 +6,6 @@ import './plugins/vuetify';
 import 'jsoneditor/dist/jsoneditor.css';
 import './assets/css/style.css';
 
-
 Vue.config.productionTip = false;
 
 new Vue({

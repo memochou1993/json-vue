@@ -3,11 +3,13 @@
     id="app"
   >
     <TheToolbar />
-    <v-container
-      fluid
-    >
-      <RouterView />
-    </v-container>
+    <v-content>
+      <v-container
+        fluid
+      >
+        <RouterView />
+      </v-container>
+    </v-content>
     <TheFooter />
   </div>
 </template>
