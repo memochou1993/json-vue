@@ -40,7 +40,7 @@
       <v-toolbar-title
         class="headline"
       >
-        Vue
+        JSON Editor
       </v-toolbar-title>
 
       <v-spacer />
