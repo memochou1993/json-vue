@@ -79,11 +79,6 @@ export default {
           to: { name: 'home' },
           icon: 'dashboard',
         },
-        {
-          title: 'Gallery',
-          to: { name: 'gallery' },
-          icon: 'photo_library',
-        },
       ],
     };
   },
