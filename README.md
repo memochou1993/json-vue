@@ -1,4 +1,4 @@
-# json
+# json-vue
 
 ## Project setup
 ```
