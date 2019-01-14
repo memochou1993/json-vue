@@ -93,9 +93,9 @@ export default {
     const [code, tree] = [this.$refs.code, this.$refs.tree];
     this.codeEditor = this.getEditor(code, 'code');
     this.treeEditor = this.getEditor(tree, 'tree');
-    const data = this.getCache('data');
-    this.setData('code', data);
-    this.setData('tree', data);
+    const data = this.getCacheData('data');
+    this.setEditorData('code', data);
+    this.setEditorData('tree', data);
   },
   methods: {
     getEditor(container, mode) {
@@ -108,13 +108,13 @@ export default {
       };
       return new Editor(container, options);
     },
-    setCache(key, value) {
+    setCacheData(key, value) {
       localStorage.setItem(key, JSON.stringify(value));
     },
-    getCache(key) {
+    getCacheData(key) {
       return JSON.parse(localStorage.getItem(key)) || {};
     },
-    setData(to, value) {
+    setEditorData(to, value) {
       switch (to) {
         case 'code':
           this.codeEditor.set(value);
@@ -126,7 +126,7 @@ export default {
           break;
       }
     },
-    getData(from) {
+    getEditorData(from) {
       switch (from) {
         case 'code':
           return this.codeEditor.get();
@@ -137,9 +137,9 @@ export default {
       }
     },
     passData(from, to) {
-      const value = this.getData(from);
-      this.setData(to, value);
-      this.setCache('data', value);
+      const value = this.getEditorData(from);
+      this.setEditorData(to, value);
+      this.setCacheData('data', value);
     },
   },
 };
