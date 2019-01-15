@@ -29,7 +29,7 @@
               x-large
               color="primary lighten-1"
               class="ma-3"
-              @click="passData('code', 'tree')"
+              @click="passEditorData('code', 'tree')"
             >
               arrow_forward
             </v-icon>
@@ -38,7 +38,7 @@
               x-large
               color="primary lighten-1"
               class="ma-3"
-              @click="passData('tree', 'code')"
+              @click="passEditorData('tree', 'code')"
             >
               arrow_back
             </v-icon>
@@ -50,7 +50,7 @@
               x-large
               color="primary lighten-1"
               class="ma-3"
-              @click="passData('code', 'tree')"
+              @click="passEditorData('code', 'tree')"
             >
               arrow_downward
             </v-icon>
@@ -58,7 +58,7 @@
               x-large
               color="primary lighten-1"
               class="ma-3"
-              @click="passData('tree', 'code')"
+              @click="passEditorData('tree', 'code')"
             >
               arrow_upward
             </v-icon>
@@ -86,24 +86,36 @@ export default {
     return {
       codeEditor: {},
       treeEditor: {},
+      data: {},
       error: '',
     };
   },
+  watch: {
+    data(value) {
+      this.setCacheData('data', value);
+    },
+  },
   mounted() {
     const [code, tree] = [this.$refs.code, this.$refs.tree];
-    this.codeEditor = this.getEditor(code, 'code');
-    this.treeEditor = this.getEditor(tree, 'tree');
+    this.codeEditor = this.initEditor(code, 'code');
+    this.treeEditor = this.initEditor(tree, 'tree');
     const data = this.getCacheData('data');
     this.setEditorData('code', data);
     this.setEditorData('tree', data);
   },
   methods: {
-    getEditor(container, mode) {
+    initEditor(container, mode) {
       const options = {
         mode,
-        modes: ['code', 'form', 'text', 'tree', 'view'],
+        onChangeText: (data) => {
+          try {
+            this.setData(data);
+          } catch (error) {
+            this.setError(error);
+          }
+        },
         onError: (error) => {
-          this.error = error.toString();
+          this.setError(error);
         },
       };
       return new Editor(container, options);
@@ -118,9 +130,11 @@ export default {
       switch (to) {
         case 'code':
           this.codeEditor.set(value);
+          this.codeEditor.focus();
           break;
         case 'tree':
           this.treeEditor.set(value);
+          this.treeEditor.expandAll();
           break;
         default:
           break;
@@ -136,10 +150,19 @@ export default {
           return {};
       }
     },
-    passData(from, to) {
-      const value = this.getEditorData(from);
-      this.setEditorData(to, value);
-      this.setCacheData('data', value);
+    passEditorData(from, to) {
+      try {
+        const data = this.getEditorData(from);
+        this.setEditorData(to, data);
+      } catch (error) {
+        this.setError(error);
+      }
+    },
+    setData(value) {
+      this.data = JSON.parse(value);
+    },
+    setError(value) {
+      this.error = value.toString();
     },
   },
 };
