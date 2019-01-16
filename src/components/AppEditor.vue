@@ -95,13 +95,15 @@ export default {
       this.setCacheData('data', value);
     },
   },
+  created() {
+    this.data = this.getCacheData('data');
+  },
   mounted() {
     const [code, tree] = [this.$refs.code, this.$refs.tree];
     this.codeEditor = this.initEditor(code, 'code');
     this.treeEditor = this.initEditor(tree, 'tree');
-    const data = this.getCacheData('data');
-    this.setEditorData('code', data);
-    this.setEditorData('tree', data);
+    this.setEditorData('code', this.data);
+    this.setEditorData('tree', this.data);
   },
   methods: {
     initEditor(container, mode) {
@@ -110,6 +112,7 @@ export default {
         onChangeText: (data) => {
           try {
             this.setData(data);
+            this.setError('');
           } catch (error) {
             this.setError(error);
           }
@@ -120,20 +123,20 @@ export default {
       };
       return new Editor(container, options);
     },
-    setCacheData(key, value) {
-      localStorage.setItem(key, JSON.stringify(value));
+    setCacheData(key, data) {
+      localStorage.setItem(key, JSON.stringify(data));
     },
     getCacheData(key) {
       return JSON.parse(localStorage.getItem(key)) || {};
     },
-    setEditorData(to, value) {
+    setEditorData(to, data) {
       switch (to) {
         case 'code':
-          this.codeEditor.set(value);
+          this.codeEditor.set(data);
           this.codeEditor.focus();
           break;
         case 'tree':
-          this.treeEditor.set(value);
+          this.treeEditor.set(data);
           this.treeEditor.expandAll();
           break;
         default:
@@ -154,15 +157,16 @@ export default {
       try {
         const data = this.getEditorData(from);
         this.setEditorData(to, data);
+        this.setError('');
       } catch (error) {
         this.setError(error);
       }
     },
-    setData(value) {
-      this.data = JSON.parse(value);
+    setData(data) {
+      this.data = JSON.parse(data);
     },
-    setError(value) {
-      this.error = value.toString();
+    setError(error) {
+      this.error = error.toString();
     },
   },
 };
