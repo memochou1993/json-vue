@@ -123,20 +123,20 @@ export default {
       };
       return new Editor(container, options);
     },
-    setCacheData(key, data) {
-      localStorage.setItem(key, JSON.stringify(data));
+    setCacheData(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
     },
     getCacheData(key) {
       return JSON.parse(localStorage.getItem(key)) || {};
     },
-    setEditorData(to, data) {
+    setEditorData(to, value) {
       switch (to) {
         case 'code':
-          this.codeEditor.set(data);
+          this.codeEditor.set(value);
           this.codeEditor.focus();
           break;
         case 'tree':
-          this.treeEditor.set(data);
+          this.treeEditor.set(value);
           this.treeEditor.expandAll();
           break;
         default:
@@ -162,11 +162,11 @@ export default {
         this.setError(error);
       }
     },
-    setData(data) {
-      this.data = JSON.parse(data);
+    setData(value) {
+      this.data = JSON.parse(value);
     },
-    setError(error) {
-      this.error = error.toString();
+    setError(value) {
+      this.error = value.toString();
     },
   },
 };
