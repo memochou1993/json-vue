@@ -80,28 +80,42 @@
 
 <script>
 import Editor from 'jsoneditor';
+import Cache from '@/helpers/Cache';
 
 export default {
   data() {
     return {
-      codeEditor: {},
-      treeEditor: {},
-      data: {},
-      error: '',
+      //
     };
+  },
+  computed: {
+    codeEditor() {
+      return this.$store.state.editor.codeEditor;
+    },
+    treeEditor() {
+      return this.$store.state.editor.treeEditor;
+    },
+    data() {
+      return this.$store.state.editor.data;
+    },
+    error() {
+      return this.$store.state.editor.error;
+    },
   },
   watch: {
     data(value) {
-      this.setCacheData('data', value);
+      Cache.set('data', value);
     },
   },
   created() {
-    this.data = this.getCacheData('data');
+    this.setData(Cache.get('data'));
   },
   mounted() {
     const [code, tree] = [this.$refs.code, this.$refs.tree];
-    this.codeEditor = this.initEditor(code, 'code');
-    this.treeEditor = this.initEditor(tree, 'tree');
+    const codeEditor = this.initEditor(code, 'code');
+    const treeEditor = this.initEditor(tree, 'tree');
+    this.setEditor('code', codeEditor);
+    this.setEditor('tree', treeEditor);
     this.setEditorData('code', this.data);
     this.setEditorData('tree', this.data);
   },
@@ -112,7 +126,6 @@ export default {
         onChangeText: (data) => {
           try {
             this.setData(data);
-            this.setError('');
           } catch (error) {
             this.setError(error);
           }
@@ -123,25 +136,17 @@ export default {
       };
       return new Editor(container, options);
     },
-    setCacheData(key, value) {
-      localStorage.setItem(key, JSON.stringify(value));
+    setEditor(mode, editor) {
+      this.$store.dispatch('setEditor', {
+        mode,
+        editor,
+      });
     },
-    getCacheData(key) {
-      return JSON.parse(localStorage.getItem(key)) || {};
-    },
-    setEditorData(to, value) {
-      switch (to) {
-        case 'code':
-          this.codeEditor.set(value);
-          this.codeEditor.focus();
-          break;
-        case 'tree':
-          this.treeEditor.set(value);
-          this.treeEditor.expandAll();
-          break;
-        default:
-          break;
-      }
+    setEditorData(to, data) {
+      this.$store.dispatch('setEditorData', {
+        to,
+        data,
+      });
     },
     getEditorData(from) {
       switch (from) {
@@ -155,18 +160,19 @@ export default {
     },
     passEditorData(from, to) {
       try {
-        const data = this.getEditorData(from);
-        this.setEditorData(to, data);
-        this.setError('');
+        this.$store.dispatch('setEditorData', {
+          to,
+          data: this.getEditorData(from),
+        });
       } catch (error) {
         this.setError(error);
       }
     },
-    setData(value) {
-      this.data = JSON.parse(value);
+    setData(data) {
+      this.$store.dispatch('setData', typeof data === 'string' ? JSON.parse(data) : data);
     },
-    setError(value) {
-      this.error = value.toString();
+    setError(error) {
+      this.$store.dispatch('setError', typeof error === 'string' ? error : error.toString());
     },
   },
 };
