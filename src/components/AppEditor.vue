@@ -22,47 +22,16 @@
         <v-layout
           justify-center
         >
-          <div
+          <AppEditorPivot
             class="hidden-sm-and-down"
-          >
-            <v-icon
-              x-large
-              color="primary lighten-1"
-              class="ma-3"
-              @click="passEditorData('code', 'tree')"
-            >
-              arrow_forward
-            </v-icon>
-            <br>
-            <v-icon
-              x-large
-              color="primary lighten-1"
-              class="ma-3"
-              @click="passEditorData('tree', 'code')"
-            >
-              arrow_back
-            </v-icon>
-          </div>
-          <div
+            :icons="['arrow_forward', 'arrow_back']"
+            :br="true"
+          />
+          <AppEditorPivot
             class="hidden-md-and-up"
-          >
-            <v-icon
-              x-large
-              color="primary lighten-1"
-              class="ma-3"
-              @click="passEditorData('code', 'tree')"
-            >
-              arrow_downward
-            </v-icon>
-            <v-icon
-              x-large
-              color="primary lighten-1"
-              class="ma-3"
-              @click="passEditorData('tree', 'code')"
-            >
-              arrow_upward
-            </v-icon>
-          </div>
+            :icons="['arrow_downward', 'arrow_upward']"
+            :br="false"
+          />
         </v-layout>
       </v-flex>
       <v-flex
@@ -81,20 +50,18 @@
 <script>
 import Editor from 'jsoneditor';
 import Cache from '@/helpers/Cache';
+import AppEditorPivot from '@/components/AppEditorPivot.vue';
 
 export default {
+  components: {
+    AppEditorPivot,
+  },
   data() {
     return {
       //
     };
   },
   computed: {
-    codeEditor() {
-      return this.$store.state.editor.codeEditor;
-    },
-    treeEditor() {
-      return this.$store.state.editor.treeEditor;
-    },
     data() {
       return this.$store.state.editor.data;
     },
@@ -105,6 +72,9 @@ export default {
   watch: {
     data(value) {
       Cache.set('data', value);
+      if (this.error !== '') {
+        this.setError('');
+      }
     },
   },
   created() {
@@ -147,26 +117,6 @@ export default {
         to,
         data,
       });
-    },
-    getEditorData(from) {
-      switch (from) {
-        case 'code':
-          return this.codeEditor.get();
-        case 'tree':
-          return this.treeEditor.get();
-        default:
-          return {};
-      }
-    },
-    passEditorData(from, to) {
-      try {
-        this.$store.dispatch('setEditorData', {
-          to,
-          data: this.getEditorData(from),
-        });
-      } catch (error) {
-        this.setError(error);
-      }
     },
     setData(data) {
       this.$store.dispatch('setData', typeof data === 'string' ? JSON.parse(data) : data);
