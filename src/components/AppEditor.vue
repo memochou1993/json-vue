@@ -24,12 +24,12 @@
         >
           <AppEditorPivot
             class="hidden-sm-and-down"
-            :icons="['arrow_forward', 'arrow_back']"
+            :icons="['fas fa-arrow-right', 'fas fa-arrow-left']"
             :br="true"
           />
           <AppEditorPivot
             class="hidden-md-and-up"
-            :icons="['arrow_downward', 'arrow_upward']"
+            :icons="['fas fa-arrow-up', 'fas fa-arrow-down']"
             :br="false"
           />
         </v-layout>

@@ -77,7 +77,7 @@ export default {
         {
           title: 'Home',
           to: { name: 'home' },
-          icon: 'dashboard',
+          icon: 'fas fa-home',
         },
       ],
     };

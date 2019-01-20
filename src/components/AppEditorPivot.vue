@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-icon
-      x-large
+      large
       :color="color"
       :class="[spacing]"
       @click="passEditorData('code', 'tree')"
@@ -12,7 +12,7 @@
       v-if="br"
     >
     <v-icon
-      x-large
+      large
       :color="color"
       :class="[spacing]"
       @click="passEditorData('tree', 'code')"
@@ -36,7 +36,7 @@ export default {
   },
   data() {
     return {
-      color: 'primary lighten-1',
+      color: 'primary lighten-2',
       spacing: 'ma-3',
     };
   },
