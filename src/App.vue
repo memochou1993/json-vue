@@ -1,7 +1,5 @@
 <template>
-  <div
-    id="app"
-  >
+  <div>
     <v-app>
       <TheToolbar />
       <v-content>

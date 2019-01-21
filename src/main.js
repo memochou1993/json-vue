@@ -5,9 +5,8 @@ import App from './App.vue';
 import router from './router';
 import store from './store/index';
 import './plugins/vuetify';
-import './stylus/main.styl';
 import 'jsoneditor/dist/jsoneditor.css';
-import './assets/css/app.styl';
+import './assets/stylus/app.styl';
 
 Vue.config.productionTip = false;
 
