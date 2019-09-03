@@ -1,38 +1,17 @@
-// import axios from 'axios';
-
 export default {
+  namespaced: true,
   state: {
-    codeEditor: {},
-    treeEditor: {},
+    codeEditor: null,
+    treeEditor: null,
     data: {},
     error: '',
   },
   mutations: {
-    setEditor(state, { mode, editor }) {
-      switch (mode) {
-        case 'code':
-          state.codeEditor = editor;
-          break;
-        case 'tree':
-          state.treeEditor = editor;
-          break;
-        default:
-          break;
-      }
+    setCodeEditor(state, codeEditor) {
+      state.codeEditor = codeEditor;
     },
-    setEditorData(state, { to, data }) {
-      switch (to) {
-        case 'code':
-          state.codeEditor.set(data);
-          state.codeEditor.focus();
-          break;
-        case 'tree':
-          state.treeEditor.set(data);
-          state.treeEditor.expandAll();
-          break;
-        default:
-          break;
-      }
+    setTreeEditor(state, treeEditor) {
+      state.treeEditor = treeEditor;
     },
     setData(state, data) {
       state.data = data;
@@ -42,17 +21,43 @@ export default {
     },
   },
   actions: {
-    setEditor(context, editor) {
-      context.commit('setEditor', editor);
+    setEditor({
+      commit,
+    }, {
+      mode,
+      editor,
+    }) {
+      if (mode === 'code') {
+        commit('setCodeEditor', editor);
+      }
+      if (mode === 'tree') {
+        commit('setTreeEditor', editor);
+      }
     },
-    setEditorData(context, { to, data }) {
-      context.commit('setEditorData', { to, data });
+    setEditorData({
+      state,
+    }, {
+      to,
+      data,
+    }) {
+      if (to === 'code') {
+        state.codeEditor.set(data);
+        state.codeEditor.focus();
+      }
+      if (to === 'tree') {
+        state.treeEditor.set(data);
+        state.treeEditor.expandAll();
+      }
     },
-    setData(context, data) {
-      context.commit('setData', data);
+    setData({
+      commit,
+    }, data) {
+      commit('setData', typeof data === 'string' ? JSON.parse(data) : data);
     },
-    setError(context, error) {
-      context.commit('setError', error);
+    setError({
+      commit,
+    }, error) {
+      commit('setError', typeof error === 'string' ? error : error.toString());
     },
   },
 };

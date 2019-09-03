@@ -12,7 +12,6 @@
       >
         <div
           ref="code"
-          class="editor"
         />
       </v-flex>
       <v-flex
@@ -29,7 +28,7 @@
           />
           <AppEditorPivot
             class="hidden-md-and-up"
-            :icons="['fas fa-arrow-up', 'fas fa-arrow-down']"
+            :icons="['fas fa-arrow-down', 'fas fa-arrow-up']"
             :br="false"
           />
         </v-layout>
@@ -40,7 +39,6 @@
       >
         <div
           ref="tree"
-          class="editor"
         />
       </v-flex>
     </v-layout>
@@ -48,6 +46,9 @@
 </template>
 
 <script>
+import {
+  mapState, mapActions,
+} from 'vuex';
 import Editor from 'jsoneditor';
 import Cache from '@/helpers/Cache';
 import AppEditorPivot from '@/components/AppEditorPivot.vue';
@@ -56,25 +57,16 @@ export default {
   components: {
     AppEditorPivot,
   },
-  data() {
-    return {
-      //
-    };
-  },
   computed: {
-    data() {
-      return this.$store.state.editor.data;
-    },
-    error() {
-      return this.$store.state.editor.error;
-    },
+    ...mapState('editor', [
+      'data',
+      'error',
+    ]),
   },
   watch: {
     data(value) {
       Cache.set('data', value);
-      if (this.error !== '') {
-        this.setError('');
-      }
+      this.error && this.setError('');
     },
   },
   created() {
@@ -82,14 +74,30 @@ export default {
   },
   mounted() {
     const [code, tree] = [this.$refs.code, this.$refs.tree];
-    const codeEditor = this.initEditor(code, 'code');
-    const treeEditor = this.initEditor(tree, 'tree');
-    this.setEditor('code', codeEditor);
-    this.setEditor('tree', treeEditor);
-    this.setEditorData('code', this.data);
-    this.setEditorData('tree', this.data);
+    this.setEditor({
+      mode: 'code',
+      editor: this.initEditor(code, 'code'),
+    });
+    this.setEditor({
+      mode: 'tree',
+      editor: this.initEditor(tree, 'tree'),
+    });
+    this.setEditorData({
+      to: 'code',
+      data: this.data,
+    });
+    this.setEditorData({
+      to: 'tree',
+      data: this.data,
+    });
   },
   methods: {
+    ...mapActions('editor', [
+      'setEditor',
+      'setEditorData',
+      'setData',
+      'setError',
+    ]),
     initEditor(container, mode) {
       const options = {
         mode,
@@ -105,24 +113,6 @@ export default {
         },
       };
       return new Editor(container, options);
-    },
-    setEditor(mode, editor) {
-      this.$store.dispatch('setEditor', {
-        mode,
-        editor,
-      });
-    },
-    setEditorData(to, data) {
-      this.$store.dispatch('setEditorData', {
-        to,
-        data,
-      });
-    },
-    setData(data) {
-      this.$store.dispatch('setData', typeof data === 'string' ? JSON.parse(data) : data);
-    },
-    setError(error) {
-      this.$store.dispatch('setError', typeof error === 'string' ? error : error.toString());
     },
   },
 };

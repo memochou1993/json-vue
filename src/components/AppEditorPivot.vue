@@ -1,9 +1,9 @@
 <template>
   <div>
     <v-icon
-      large
       :color="color"
       :class="[spacing]"
+      large
       @click="passEditorData('code', 'tree')"
     >
       {{ icons[0] }}
@@ -12,9 +12,9 @@
       v-if="br"
     >
     <v-icon
-      large
       :color="color"
       :class="[spacing]"
+      large
       @click="passEditorData('tree', 'code')"
     >
       {{ icons[1] }}
@@ -23,6 +23,10 @@
 </template>
 
 <script>
+import {
+  mapState, mapActions,
+} from 'vuex';
+
 export default {
   props: {
     icons: {
@@ -31,7 +35,7 @@ export default {
     },
     br: {
       type: Boolean,
-      required: false,
+      required: true,
     },
   },
   data() {
@@ -41,32 +45,33 @@ export default {
     };
   },
   computed: {
-    codeEditor() {
-      return this.$store.state.editor.codeEditor;
-    },
-    treeEditor() {
-      return this.$store.state.editor.treeEditor;
-    },
+    ...mapState('editor', [
+      'codeEditor',
+      'treeEditor',
+    ]),
   },
   methods: {
+    ...mapActions('editor', [
+      'setEditorData',
+      'setError',
+    ]),
     getEditorData(from) {
-      switch (from) {
-        case 'code':
-          return this.codeEditor.get();
-        case 'tree':
-          return this.treeEditor.get();
-        default:
-          return {};
+      if (from === 'code') {
+        return this.codeEditor.get();
       }
+      if (from === 'tree') {
+        return this.treeEditor.get();
+      }
+      return null;
     },
     passEditorData(from, to) {
       try {
-        this.$store.dispatch('setEditorData', {
+        this.setEditorData({
           to,
           data: this.getEditorData(from),
         });
       } catch (error) {
-        this.$emit('setError', error);
+        this.setError(error);
       }
     },
   },
