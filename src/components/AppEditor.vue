@@ -7,35 +7,18 @@
       justify-center
     >
       <v-flex
-        md5
+        md6
         xs12
+        class="pa-3"
       >
         <div
           ref="code"
         />
       </v-flex>
       <v-flex
-        md1
+        md6
         xs12
-      >
-        <v-layout
-          justify-center
-        >
-          <AppEditorPivot
-            class="hidden-sm-and-down"
-            :icons="['fas fa-arrow-right', 'fas fa-arrow-left']"
-            :br="true"
-          />
-          <AppEditorPivot
-            class="hidden-md-and-up"
-            :icons="['fas fa-arrow-down', 'fas fa-arrow-up']"
-            :br="false"
-          />
-        </v-layout>
-      </v-flex>
-      <v-flex
-        md5
-        xs12
+        class="pa-3"
       >
         <div
           ref="tree"
@@ -47,18 +30,38 @@
 
 <script>
 import {
-  mapState, mapActions,
+  mapState, mapMutations, mapActions,
 } from 'vuex';
-import Editor from 'jsoneditor';
+import JsonEditor from 'jsoneditor';
+import VanillaPicker from 'jsoneditor/src/js/vanilla-picker';
 import Cache from '@/helpers/Cache';
-import AppEditorPivot from '@/components/AppEditorPivot.vue';
 
 export default {
-  components: {
-    AppEditorPivot,
+  data() {
+    return {
+      initialData: {
+        array: [
+          1,
+          2,
+          3,
+        ],
+        boolean: true,
+        color: '#82b92c',
+        null: null,
+        number: 123,
+        object: {
+          a: 'b',
+          c: 'd',
+          e: 'f',
+        },
+        string: 'Hello World',
+      },
+    };
   },
   computed: {
     ...mapState('editor', [
+      'codeEditor',
+      'treeEditor',
       'data',
       'error',
     ]),
@@ -70,49 +73,61 @@ export default {
     },
   },
   created() {
-    this.setData(Cache.get('data'));
+    this.setData(Cache.get('data') || JSON.stringify(this.initialData));
   },
   mounted() {
-    const [code, tree] = [this.$refs.code, this.$refs.tree];
-    this.setEditor({
-      mode: 'code',
-      editor: this.initEditor(code, 'code'),
-    });
-    this.setEditor({
-      mode: 'tree',
-      editor: this.initEditor(tree, 'tree'),
-    });
-    this.setEditorData({
-      to: 'code',
-      data: this.data,
-    });
-    this.setEditorData({
-      to: 'tree',
-      data: this.data,
-    });
+    this.initCodeEditor();
+    this.initTreeEditor();
   },
   methods: {
+    ...mapMutations('editor', [
+      'setCodeEditor',
+      'setTreeEditor',
+    ]),
     ...mapActions('editor', [
-      'setEditor',
-      'setEditorData',
       'setData',
       'setError',
     ]),
+    initCodeEditor() {
+      const codeEditor = this.initEditor(this.$refs.code, 'code');
+      this.setCodeEditor(codeEditor);
+      this.codeEditor.set(this.data);
+      this.codeEditor.focus();
+    },
+    initTreeEditor() {
+      const treeEditor = this.initEditor(this.$refs.tree, 'tree');
+      this.setTreeEditor(treeEditor);
+      this.treeEditor.set(this.data);
+      this.treeEditor.expandAll();
+    },
     initEditor(container, mode) {
-      const options = {
+      return new JsonEditor(container, {
         mode,
         onChangeText: (data) => {
           try {
             this.setData(data);
+            mode === 'code' && this.treeEditor.update(this.data);
+            mode === 'tree' && this.codeEditor.update(this.data);
           } catch (error) {
             this.setError(error);
           }
         },
+        onColorPicker: (parent, color, onChange) => {
+          new VanillaPicker({
+            parent,
+            color,
+            onChange: (selectedColor) => {
+              const hex = selectedColor.rgba[3] === 1
+                ? selectedColor.hex.substr(0, 7)
+                : selectedColor.hex;
+              onChange(hex);
+            },
+          }).show();
+        },
         onError: (error) => {
           this.setError(error);
         },
-      };
-      return new Editor(container, options);
+      });
     },
   },
 };

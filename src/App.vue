@@ -29,3 +29,8 @@ export default {
   },
 };
 </script>
+
+<style lang="stylus">
+.pointer
+  cursor pointer
+</style>

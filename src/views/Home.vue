@@ -8,7 +8,6 @@
 import AppEditor from '@/components/AppEditor.vue';
 
 export default {
-  name: 'Home',
   components: {
     AppEditor,
   },

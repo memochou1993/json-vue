@@ -21,34 +21,6 @@ export default {
     },
   },
   actions: {
-    setEditor({
-      commit,
-    }, {
-      mode,
-      editor,
-    }) {
-      if (mode === 'code') {
-        commit('setCodeEditor', editor);
-      }
-      if (mode === 'tree') {
-        commit('setTreeEditor', editor);
-      }
-    },
-    setEditorData({
-      state,
-    }, {
-      to,
-      data,
-    }) {
-      if (to === 'code') {
-        state.codeEditor.set(data);
-        state.codeEditor.focus();
-      }
-      if (to === 'tree') {
-        state.treeEditor.set(data);
-        state.treeEditor.expandAll();
-      }
-    },
     setData({
       commit,
     }, data) {
