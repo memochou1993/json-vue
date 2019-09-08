@@ -3,7 +3,7 @@
     <v-toolbar
       app
       dark
-      color="primary"
+      color="primary primary-gradient"
     >
       <v-toolbar-title
         class="headline"

@@ -4,7 +4,7 @@
       height="auto"
     >
       <v-card
-        class="flex primary lighten-1 white--text text-xs-center"
+        class="flex primary primary-gradient white--text text-xs-center"
       >
         <v-card-text>
           <span
