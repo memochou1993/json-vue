@@ -10,7 +10,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.6.3",
     "axios": "^0.18.0",
-    "jsoneditor": "^5.27.0",
+    "jsoneditor": "^9.5.6",
     "vue": "^2.5.17",
     "vue-axios": "^2.1.4",
     "vue-router": "^3.0.1",
